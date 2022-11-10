@@ -1,8 +1,6 @@
 ﻿//main.cpp
 //负责主进程处理，包括初始化和配置写入读取等
 
-#include <fstream>
-#include <sstream>
 
 #include "./main.h"
 

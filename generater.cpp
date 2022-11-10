@@ -1,6 +1,6 @@
 ﻿//generater.cpp
 //负责生成mod文件的md5列表并写入文件
-//工作进度：已完成输出到屏幕，下一步工作为输出到文件
+//工作进度：待进一步测试
 
 #include <ctime>
 
@@ -331,7 +331,7 @@ int walkthroughOnce(string dirPath) {
         //否则输出文件路径与MD5值
         else {
             cout << "正在生成：" << workDir + fileInfo.cFileName << endl;
-            ofs_md5 << workDir + fileInfo.cFileName << endl;
+            ofs_md5 << workDir.substr(dirPath.length()-1) + fileInfo.cFileName << endl;
             string mytmp = workDir + fileInfo.cFileName;
             ofs_md5 << fileMD5(mytmp) << endl;
         }

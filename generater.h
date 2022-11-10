@@ -2,7 +2,6 @@
 #ifndef MD5_H
 #define MD5_H
 #include <string>
-#include <fstream>
 /* Type define */
 typedef unsigned char byte;
 typedef unsigned int uint32;
@@ -43,3 +42,4 @@ private:
 };
 #endif /*MD5_H*/
 
+string fileMD5(string filePath);

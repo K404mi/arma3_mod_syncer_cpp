@@ -9,6 +9,7 @@
 using namespace std;
 
 extern int generate(struct struct_config config);
+extern int check(struct_config config);
 
 extern struct struct_config {
 	char mod_folder[512];

@@ -24,13 +24,15 @@ int main() {
 	int func = 1;
 
 	//system("cls");
-	printf("\n\n1、生成样本文件(测试中)\n2、本地检查MOD完整性(待开发)\n3、联网检查MOD完整性(待开发)\n\n");
+	printf("\n\n1、生成样本文件(测试中)\n2、本地检查MOD列表(待开发)\n3、本地检查MOD完整性(测试中)\n4、联网检查MOD列表(待开发)\n5、联网检查MOD完整性(待开发)\n\n");
 	printf("请选择功能（输入数字）：");
 	scanf_s("%d", &func);
 
 	switch (func){
 	case 1:
 		generate(config);
+	case 3:
+		check(config);
 	default:
 		break;
 	}
@@ -61,8 +63,9 @@ int init() {
 		else
 			remove("./config.txt");
 	}
+
 	//不存在配置文件或不选择载入则进行创建
-	printf("未检测到配置文件，正在创建新的配置文件...\n");
+	printf("正在创建新的配置文件...\n");
 	printf("请输入mod文件夹路径:");
 	cin.getline(config.mod_folder, 512);
 	printf("请输入服务器ip(待开发): ");
@@ -73,6 +76,7 @@ int init() {
 	//scanf_s("%d", &config.port);
 	config_helper(&config);
 	printf("\n\n配置生成完毕，为当前目录下的config.txt文件\n");
+	
 	return 0;
 }
 

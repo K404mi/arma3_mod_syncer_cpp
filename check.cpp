@@ -1,4 +1,4 @@
-//check.cpp
+﻿//check.cpp
 //检查文件md5值是否匹配
 
 #include "./main.h"
@@ -6,6 +6,7 @@
 
 using namespace std;
 
+extern struct stat stat_buffer;
 
 ifstream ifs_md5;
 ofstream ofs_dump;
@@ -25,6 +26,8 @@ int checkOnce(string mod_folder, string path, string sample_md5){
 	int flag = 0;
 	string local_md5;
 	string fullpath = mod_folder + path;
+	if (stat(fullpath.c_str(), &stat_buffer) != 0)
+		return 0;
 	local_md5 = fileMD5(fullpath);
 	if(local_md5 == sample_md5){
 		flag = 1;
@@ -34,7 +37,6 @@ int checkOnce(string mod_folder, string path, string sample_md5){
 		tail->next = new file_linknode(path, local_md5, sample_md5);
 		tail = tail->next;
 	}
-	cout << path << endl;
 	return flag;
 }
 
@@ -52,33 +54,33 @@ int check(struct_config config){
 	while(ifs.getline(path, 512)){
 		ifs.getline(sample_md5, 36);
 		if (checkOnce(config.mod_folder, path, sample_md5)) {
-			printf("[error]");
-			count_error++;
+			printf("\033[32m[pass]\033[0m");
+			count_pass++;
 		}
 		else {
-			printf("[pass]");
-			count_pass++;
+			printf("\033[31m[error]\033[0m");
+			count_error++;
 		}
 		cout << path << endl;
 	}
 	ifs.close();
 
-	file_linknode* cursor = head->next;
-	cout << "匹配结果：" << count_pass << "个符合，" << count_error << "个不符" << endl;
+	cout << "匹配结果: " << count_pass << "个符合, " << count_error << "个不符" << endl;
 	if (count_error) {
-		cout << "损坏模组列表：" << endl;
+		file_linknode* cursor = head->next;
+		cout << "损坏模组列表: " << endl;
 		do {
 			if (strcmp(mod_name_buffer, cursor->mod_name)) {
 				strcpy_s(mod_name_buffer, cursor->mod_name);
 				cout << mod_name_buffer << endl;
 			}
 		} while (cursor->next == NULL);
-	}
 
-	cout << "\n是否导出损坏文件列表？(y/others)" << endl;
-	scanf_s("%c", &choice);
-	if (choice == 'y') {
-		dumplist(head->next);
+		cout << "\n是否导出损坏文件列表? (y/others)" << endl;
+		scanf_s("%c", &choice, 1);
+		if (choice == 'y') {
+			dumplist(head->next);
+		}
 	}
 	return 0;
 }

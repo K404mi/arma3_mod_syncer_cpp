@@ -8,10 +8,16 @@ using namespace std;
 
 
 ifstream ifs_md5;
+ofstream ofs_dump;
 file_linknode* tail;
 
 int dumplist(file_linknode* cursor) {
-
+	ofs_dump.open("./dump.txt");
+	do{
+		ofs_dump << "MOD: " << cursor->mod_name << '\n' << "路径: " << cursor->path << '\n' << "本地md5: " << cursor->local_md5 << '\n' << "样本md5: " << cursor->sample_md5 << '\n' << endl;
+		cursor = cursor->next;
+	}while(cursor!=NULL);
+	ofs_dump.close();
 	return 0;
 }
 

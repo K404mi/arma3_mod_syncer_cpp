@@ -25,10 +25,15 @@ extern struct file_linknode {
 	file_linknode* next;
 
 	file_linknode(string path, string local_md5, string sample_md5) {
-		strcpy_s(this->mod_name, path.substr(0, path.find('\\')).c_str());
+		strcpy_s(this->mod_name, path.substr(path.find('\\'), path.find('\\')).c_str());
 		strcpy_s(this->path, path.c_str());
 		strcpy_s(this->local_md5, local_md5.c_str());
 		strcpy_s(this->sample_md5, sample_md5.c_str());
+		this->next = NULL;
+	}
+
+	file_linknode(string modname){
+		strcpy_s(this->mod_name, modname.c_str());
 		this->next = NULL;
 	}
 };

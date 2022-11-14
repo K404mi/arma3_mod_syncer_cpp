@@ -40,6 +40,71 @@ int checkOnce(string mod_folder, string path, string sample_md5){
 	return flag;
 }
 
+int pos(string T, string P, int n){
+	int count = 0;
+	unsigned begined = 0;
+	while((begined=T.find(P,begined))!=string::npos){
+		count++;
+		begined += P.length();
+		if(n==count)
+			return begined-1;
+	}
+}
+
+int walkthroughOnce(string dirPath) {
+    WIN32_FIND_DATAA fileInfo;
+    string workDir = dirPath;
+    dirPath += "*";
+    HANDLE hFile = FindFirstFileA(dirPath.c_str(), &fileInfo);
+	HANDLE last_pos = hFile;
+    if (hFile == INVALID_HANDLE_VALUE) 
+        return -1;
+    do{
+        if (!(strcmp(fileInfo.cFileName, ".") && strcmp(fileInfo.cFileName, "..")))
+            continue;
+        //如果是文件夹则改变工作目录继续遍历
+        if (fileInfo.dwFileAttributes != 16 && fileInfo.dwFileAttributes != 1040) {
+            cout << "正在生成：" << workDir + fileInfo.cFileName << endl;
+            ofs_md5 << workDir.substr(mod_path_len) + fileInfo.cFileName << endl;
+            string mytmp = workDir + fileInfo.cFileName;
+            ofs_md5 << fileMD5(mytmp) << endl;
+        }
+    } while (FindNextFileA(hFile, &fileInfo));
+    return 0;
+}
+
+int simple_check(struct_config config){
+	ifstream ifs;
+	WIN32_FIND_DATAA fileInfo;
+	file_linknode* head = tail;
+	int flag;
+	string modname, dirPath = config.mod_folder;
+	if(dirPath.back() != '\\')
+		dirPath += '\\';
+    string workDir = dirPath;
+    dirPath += "*";
+    HANDLE hFile = FindFirstFileA(dirPath.c_str(), &fileInfo);
+	HANDLE last_pos = hFile;
+
+	ifs.open("./md5.txt");
+	while(ifs.getline(modname, 512)){
+		modname = modname.substr(modname.find('\\'),modname.find('\\'));
+		if(tail->mod_name != modname){
+			tail = new file_linknode(modname);
+			head->next = tail
+		}
+		ifs.getline(modname, 512);
+	}
+	ifs.close();
+
+	while(head = head->next){
+		x
+	}
+
+
+	return 0;
+}
+
 int check(struct_config config){
 	ifstream ifs;
 	file_linknode* head = tail;

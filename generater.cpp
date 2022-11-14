@@ -270,8 +270,10 @@ string fileMD5(string filePath) {
 
 int walkthroughOnce(string dirPath) {
     WIN32_FIND_DATAA fileInfo;
-    string workDir = dirPath + '\\';
-    dirPath += "\\*";
+	if(dirPath.back() != '\\')
+		dirPath += '\\';
+    string workDir = dirPath;
+    dirPath += "*";
     LPCSTR dirTmp = dirPath.c_str();
     HANDLE hFile = FindFirstFileA(dirTmp, &fileInfo);
     if (hFile == INVALID_HANDLE_VALUE) 

@@ -9,6 +9,7 @@
 using namespace std;
 
 extern int generate(struct struct_config config);
+extern int simple_check(struct_config config);
 extern int check(struct_config config);
 
 extern struct struct_config {
@@ -24,6 +25,10 @@ extern struct mod_linknode {
 
 	mod_linknode(string modname) {
 		strcpy_s(this->mod_name, modname.c_str());
+		this->next = NULL;
+	}
+
+	mod_linknode() {
 		this->next = NULL;
 	}
 };

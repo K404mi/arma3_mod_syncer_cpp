@@ -31,8 +31,13 @@ int main() {
 	switch (func){
 	case 1:
 		generate(config);
+		break;
+	case 2:
+		simple_check(config);
+		break;
 	case 3:
 		check(config);
+		break;
 	default:
 		break;
 	}

@@ -261,7 +261,7 @@ string fileMD5(string filePath) {
     MD5 md5;
     ifstream ifs(filePath, ios::binary);
     if (!ifs)
-        return 0;
+        return "\0";
     md5.reset();
     md5.update(ifs);
     string str = md5.toString();

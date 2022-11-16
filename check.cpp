@@ -12,7 +12,7 @@ extern struct stat stat_buffer;
 ifstream ifs_md5;
 ofstream ofs_dump;
 file_linknode* tail;
-mod_linknode* head_sample;
+mod_linknode* head_sample = new mod_linknode();
 
 
 int dumplist(file_linknode* cursor) {
@@ -58,7 +58,7 @@ int simple_check(struct_config config){
 	ifstream ifs;
 	WIN32_FIND_DATAA fileInfo;
 	mod_linknode* tail_sample = head_sample;
-	mod_linknode* head_local;
+	mod_linknode* head_local = new mod_linknode();
 	mod_linknode* tail_local = head_local;
 	char modname_cstr[512];
 	string dirPath = config.mod_folder;
@@ -74,8 +74,8 @@ int simple_check(struct_config config){
 	ifs.open("./md5.txt");
 	while(ifs.getline(modname_cstr, 512)){
 		string modname(modname_cstr);
-		modname = modname.substr(modname.find('\\'),modname.find('\\'));
-		if(tail_sample->mod_name != modname){
+		modname = modname.substr(1, pos(modname, "\\", 2) - 1);
+		if(tail_sample->mod_name == NULL || tail_sample->mod_name != modname){
 			tail_sample->next = new mod_linknode(modname);
 			tail_sample = tail_sample->next;
 		}
@@ -100,10 +100,10 @@ int simple_check(struct_config config){
 		while (tail_local = tail_local->next){
 			if(tail_local->flag == true)
 				continue;
-			if(tail_sample->mod_name != tail_local->mod_name)
+			if (strcmp(tail_sample->mod_name, tail_local->mod_name))
 				continue;
 			tail_sample->flag = true;
-			tail_local->flag == true;
+			tail_local->flag = true;
 			break;
 		}
 		tail_local = head_local;

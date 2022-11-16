@@ -1,5 +1,6 @@
 ﻿//check.cpp
 //检查文件md5值是否匹配
+//工作进度：有待进一步测试
 
 #include "./main.h"
 #include "./generater.h"

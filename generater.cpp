@@ -1,6 +1,6 @@
 ﻿//generater.cpp
 //负责生成mod文件的md5列表并写入文件
-//工作进度：待进一步测试
+//工作进度：有待进一步测试
 
 #include <ctime>
 

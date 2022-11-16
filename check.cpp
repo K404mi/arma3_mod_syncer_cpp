@@ -53,36 +53,14 @@ int pos(string T, string P, int n){
 	}
 }
 
-int walkthroughOnce(string dirPath) {
-    WIN32_FIND_DATAA fileInfo;
-    string workDir = dirPath;
-    dirPath += "*";
-    HANDLE hFile = FindFirstFileA(dirPath.c_str(), &fileInfo);
-	HANDLE last_pos = hFile;
-    if (hFile == INVALID_HANDLE_VALUE) 
-        return -1;
-    do{
-        if (!(strcmp(fileInfo.cFileName, ".") && strcmp(fileInfo.cFileName, "..")))
-            continue;
-        //如果是文件夹则改变工作目录继续遍历
-        if (fileInfo.dwFileAttributes != 16 && fileInfo.dwFileAttributes != 1040) {
-            cout << "正在生成：" << workDir + fileInfo.cFileName << endl;
-            ofs_md5 << workDir.substr(mod_path_len) + fileInfo.cFileName << endl;
-            string mytmp = workDir + fileInfo.cFileName;
-            ofs_md5 << fileMD5(mytmp) << endl;
-        }
-    } while (FindNextFileA(hFile, &fileInfo));
-    return 0;
-}
-
-
 int simple_check(struct_config config){
 	ifstream ifs;
 	WIN32_FIND_DATAA fileInfo;
 	mod_linknode* tail_sample = head_sample;
-	mod_linknode* head_local = new mod_linknode();
+	mod_linknode* head_local;
 	mod_linknode* tail_local = head_local;
-	string modname, dirPath = config.mod_folder;
+	char modname_cstr[512];
+	string dirPath = config.mod_folder;
 	if(dirPath.back() != '\\')
 		dirPath += '\\';
     string workDir = dirPath;
@@ -93,13 +71,14 @@ int simple_check(struct_config config){
 
 	//将样本mod列表与本地mod列表导入内存
 	ifs.open("./md5.txt");
-	while(ifs.getline(modname, 512)){
+	while(ifs.getline(modname_cstr, 512)){
+		string modname(modname_cstr);
 		modname = modname.substr(modname.find('\\'),modname.find('\\'));
 		if(tail_sample->mod_name != modname){
 			tail_sample->next = new mod_linknode(modname);
 			tail_sample = tail_sample->next;
 		}
-		ifs.getline(modname, 512);
+		ifs.getline(modname_cstr, 512);
 	}
 	ifs.close();
 	do{
@@ -123,7 +102,7 @@ int simple_check(struct_config config){
 			if(tail_sample->mod_name != tail_local->mod_name)
 				continue;
 			tail_sample->flag = true;
-			tail_local->flag == true
+			tail_local->flag == true;
 			break;
 		}
 		tail_local = head_local;

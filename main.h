@@ -18,9 +18,14 @@ extern struct struct_config {
 };
 
 extern struct mod_linknode {
-	char mod_name[128];
+	char mod_name[512];
 	bool flag = false;
 	mod_linknode* next;
+
+	mod_linknode(string modname) {
+		strcpy_s(this->mod_name, modname.c_str());
+		this->next = NULL;
+	}
 };
 
 extern struct file_linknode {

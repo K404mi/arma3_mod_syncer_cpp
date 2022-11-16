@@ -17,6 +17,12 @@ extern struct struct_config {
 	int port;
 };
 
+extern struct mod_linknode {
+	char mod_name[128];
+	bool flag = false;
+	mod_linknode* next;
+};
+
 extern struct file_linknode {
 	char mod_name[128];
 	char path[512];

@@ -11,6 +11,8 @@ extern struct stat stat_buffer;
 ifstream ifs_md5;
 ofstream ofs_dump;
 file_linknode* tail;
+mod_linknode* head_sample;
+
 
 int dumplist(file_linknode* cursor) {
 	ofs_dump.open("./dump.txt");
@@ -73,34 +75,70 @@ int walkthroughOnce(string dirPath) {
     return 0;
 }
 
+
 int simple_check(struct_config config){
 	ifstream ifs;
 	WIN32_FIND_DATAA fileInfo;
-	file_linknode* head = tail;
-	int flag;
+	mod_linknode* tail_sample = head_sample;
+	mod_linknode* head_local = new mod_linknode();
+	mod_linknode* tail_local = head_local;
 	string modname, dirPath = config.mod_folder;
 	if(dirPath.back() != '\\')
 		dirPath += '\\';
     string workDir = dirPath;
     dirPath += "*";
     HANDLE hFile = FindFirstFileA(dirPath.c_str(), &fileInfo);
-	HANDLE last_pos = hFile;
+	if (hFile == INVALID_HANDLE_VALUE) 
+        return -1;
 
+	//将样本mod列表与本地mod列表导入内存
 	ifs.open("./md5.txt");
 	while(ifs.getline(modname, 512)){
 		modname = modname.substr(modname.find('\\'),modname.find('\\'));
-		if(tail->mod_name != modname){
-			tail = new file_linknode(modname);
-			head->next = tail
+		if(tail_sample->mod_name != modname){
+			tail_sample->next = new mod_linknode(modname);
+			tail_sample = tail_sample->next;
 		}
 		ifs.getline(modname, 512);
 	}
 	ifs.close();
+	do{
+        if (!(strcmp(fileInfo.cFileName, ".") && strcmp(fileInfo.cFileName, "..")))
+            continue;
+		if (!strcmp(fileInfo.cFileName, "!DO_NOT_CHANGE_FILES_IN_THESE_FOLDERS"))
+            continue;
+        if (fileInfo.dwFileAttributes == 16 || fileInfo.dwFileAttributes == 1040) {
+			tail_local->next = new mod_linknode(fileInfo.cFileName);
+			tail_local = tail_local->next;
+        }
+    } while (FindNextFileA(hFile, &fileInfo));
+	tail_sample = head_sample;
+	tail_local = head_local;
 
-	while(head = head->next){
-		x
+	//比对
+	while(tail_sample = tail_sample->next){
+		while (tail_local = tail_local->next){
+			if(tail_local->flag == true)
+				continue;
+			if(tail_sample->mod_name != tail_local->mod_name)
+				continue;
+			tail_sample->flag = true;
+			tail_local->flag == true
+			break;
+		}
+		tail_local = head_local;
 	}
+	tail_sample = head_sample;
 
+	//输出结果
+	cout<< "\n缺失的mod:"<< endl;
+	while(tail_sample = tail_sample->next)
+		if(tail_sample->flag == false)
+			cout<< tail_sample->mod_name << endl;
+	cout<< "\n多余的mod:"<< endl;
+	while(tail_local = tail_local->next)
+		if(tail_local->flag == false)
+			cout<< tail_local->mod_name << endl;
 
 	return 0;
 }

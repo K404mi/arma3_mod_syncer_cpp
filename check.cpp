@@ -137,11 +137,11 @@ int check(struct_config config){
 	while(ifs.getline(path, 512)){
 		ifs.getline(sample_md5, 36);
 		if (checkOnce(config.mod_folder, path, sample_md5)) {
-			printf("\033[32m[pass]\033[0m");
+			printf("\033[1;32m[pass]\033[0m");
 			count_pass++;
 		}
 		else {
-			printf("\033[31m[error]\033[0m");
+			printf("\033[1;31m[error]\033[0m");
 			count_error++;
 		}
 		cout << path << endl;

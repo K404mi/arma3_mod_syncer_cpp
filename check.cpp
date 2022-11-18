@@ -132,18 +132,22 @@ int check(struct_config config){
 	char path[512];
 	char sample_md5[36];
 	char local_md5[36];
+	HANDLE consolehwnd = GetStdHandle(STD_OUTPUT_HANDLE);
 
 	ifs.open("./md5.txt");
 	while(ifs.getline(path, 512)){
 		ifs.getline(sample_md5, 36);
 		if (checkOnce(config.mod_folder, path, sample_md5)) {
-			printf("\033[1;32m[pass]\033[0m");
+			SetConsoleTextAttribute(consolehwnd, 0x8 | 0x2);
+			printf("[pass]");
 			count_pass++;
 		}
 		else {
-			printf("\033[1;31m[error]\033[0m");
+			SetConsoleTextAttribute(consolehwnd, 0x8 | 0x4);
+			printf("[error]");
 			count_error++;
 		}
+		SetConsoleTextAttribute(consolehwnd, 0x7);
 		cout << path << endl;
 	}
 	ifs.close();
